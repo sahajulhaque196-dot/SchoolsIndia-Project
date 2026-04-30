@@ -1,0 +1,74 @@
+name: Deploy Schoolspedia to Cloudflare Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install pandas
+
+      - name: Download schools CSV from release
+        run: |
+          echo "CSV files will be downloaded from GitHub Release assets"
+          ls -la
+
+      - name: Upload CSV files notice
+        run: |
+          if [ ! -f "schools.csv" ]; then
+            echo "ERROR: schools.csv not found!"
+            echo "Please upload schools.csv and LocalDataHub_Village_Master_v2.csv"
+            echo "as GitHub Release assets (see README)"
+            exit 1
+          fi
+
+      - name: Generate school pages
+        run: |
+          python generator/generator.py \
+            --input schools.csv \
+            --village LocalDataHub_Village_Master_v2.csv \
+            --output output
+        timeout-minutes: 300
+
+      - name: Copy policy pages to output
+        run: |
+          # About
+          mkdir -p output/about
+          cp pages/about.html output/about/index.html
+          # Privacy
+          mkdir -p output/privacy
+          cp pages/privacy.html output/privacy/index.html
+          # Disclaimer
+          mkdir -p output/disclaimer
+          cp pages/disclaimer.html output/disclaimer/index.html
+          # Terms
+          mkdir -p output/terms
+          cp pages/terms.html output/terms/index.html
+          # Contact
+          mkdir -p output/contact
+          cp pages/contact.html output/contact/index.html
+          # Articles
+          cp -r articles output/articles
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          command: pages deploy output --project-name=schoolspedia --commit-dirty=true
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
