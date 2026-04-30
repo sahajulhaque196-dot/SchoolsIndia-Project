@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://schoolspedia.in/sitemap.xml
+
+# Disallow admin/internal paths
+Disallow: /admin/
+Disallow: /api/
+Disallow: /search/?*sort=
+Disallow: /*.json$
+
+# Slow down aggressive crawlers
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 30

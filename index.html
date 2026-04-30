@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Schools Directory – Find Schools Across India | Schoolspedia.in</title>
+  <meta name="description" content="Comprehensive directory of 16 lakh+ schools across India. Find government and private schools by state, district, block and village. UDISE school data, address, type, category and more.">
+  <meta name="keywords" content="Indian schools directory, school search India, government schools, private schools, UDISE code, school list state district">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://schoolspedia.in/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Indian Schools Directory – 16 Lakh+ Schools">
+  <meta property="og:description" content="Find any school in India. Search by name, state, district or UDISE code.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schoolspedia.in/">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Indian Schools Directory",
+    "url": "https://schoolspedia.in",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://schoolspedia.in/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=Lexend:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --saffron: #38BDF8;
+      --saffron-light: #7DD3FC;
+      --green: #138808;
+      --navy: #1C2B3A;
+      --navy-light: #1C2B3A;
+      --cream: #FDF6EC;
+      --text: #1A1A2E;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --white: #FFFFFF;
+      --card-shadow: 0 4px 24px rgba(11,29,58,0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Lexend', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ===== NAV ===== */
+    nav {
+      background: #1C2B3A;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 3px solid #0EA5E9;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span { color: #7DD3FC; }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav ul a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: #7DD3FC; }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #1C2B3A 0%, #1C2B3A 60%, #1a3a6b 100%);
+      padding: 80px 2rem 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -10%;
+      width: 120%;
+      height: 200%;
+      background: radial-gradient(ellipse at 30% 40%, rgba(255,107,0,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 60%, rgba(19,136,8,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,107,0,0.15);
+      border: 1px solid rgba(255,107,0,0.3);
+      color: #7DD3FC;
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .accent { color: #7DD3FC; }
+
+    .hero p {
+      color: rgba(255,255,255,0.65);
+      font-size: 1.1rem;
+      font-weight: 300;
+      max-width: 520px;
+      margin: 0 auto 40px;
+    }
+
+    /* Search Box */
+    .search-box {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 20px 160px 20px 24px;
+      font-size: 1rem;
+      font-family: 'Lexend', sans-serif;
+      border: none;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.97);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+      outline: none;
+      color: var(--text);
+      transition: box-shadow 0.2s;
+    }
+
+    .search-box input:focus {
+      box-shadow: 0 8px 40px rgba(0,0,0,0.3), 0 0 0 3px rgba(255,107,0,0.3);
+    }
+
+    .search-box input::placeholder { color: var(--muted); }
+
+    .search-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #0EA5E9, #0EA5E9);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: 'Lexend', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+    }
+
+    .search-btn:hover {
+      background: linear-gradient(135deg, #0EA5E9, #0284C7);
+      transform: translateY(-50%) scale(1.03);
+    }
+
+    .search-tags {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .search-tag {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .search-tag:hover {
+      background: rgba(255,107,0,0.2);
+      color: #7DD3FC;
+      border-color: rgba(255,107,0,0.3);
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      background: var(--white);
+      padding: 28px 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0EA5E9;
+      letter-spacing: -1px;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section { padding: 60px 0; }
+
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #1C2B3A;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 300;
+      margin-bottom: 32px;
+    }
+
+    /* State Grid */
+    .state-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .state-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 18px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .state-card:hover {
+      border-color: #0EA5E9;
+      box-shadow: var(--card-shadow);
+      transform: translateY(-2px);
+    }
+
+    .state-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .state-count {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 3px;
+      font-weight: 300;
+    }
+
+    .state-arrow {
+      color: #0EA5E9;
+      font-size: 1.1rem;
+    }
+
+    /* School Cards */
+    .school-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .school-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .school-card:hover {
+      border-color: #0EA5E9;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(255,107,0,0.12);
+    }
+
+    .school-card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .school-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .school-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #1C2B3A;
+      line-height: 1.4;
+    }
+
+    .school-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .badge {
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .badge-govt {
+      background: #EEF7EE;
+      color: var(--green);
+    }
+
+    .badge-private {
+      background: #FFF3E8;
+      color: #0EA5E9;
+    }
+
+    .badge-type {
+      background: #EEF2FF;
+      color: #4F46E5;
+    }
+
+    .school-location {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .udise-tag {
+      font-size: 0.75rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    /* Features */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .feature-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #1C2B3A;
+      margin-bottom: 8px;
+    }
+
+    .feature-text {
+      font-size: 0.875rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* SEO Articles teaser */
+    .article-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    .article-card:hover {
+      border-color: #0EA5E9;
+      box-shadow: var(--card-shadow);
+    }
+
+    .article-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    /* Footer */
+    footer {
+      background: #1C2B3A;
+      color: rgba(255,255,255,0.6);
+      padding: 48px 2rem 32px;
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .footer-brand .logo-text { font-size: 1.1rem; }
+
+    .footer-desc {
+      font-size: 0.85rem;
+      line-height: 1.8;
+      margin-top: 12px;
+      font-weight: 300;
+    }
+
+    .footer-col h4 {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 8px; }
+    .footer-col ul a {
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 300;
+      transition: color 0.2s;
+    }
+    .footer-col ul a:hover { color: #7DD3FC; }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 32px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      nav ul { display: none; }
+      .stats-bar { gap: 2rem; }
+      .hero h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-icon">🏫</div>
+    <span style="font-family:Arial,sans-serif;font-size:1.05rem;font-weight:800;color:white">Schools<span style="color:#38BDF8">pedia</span><span style="color:rgba(255,255,255,0.35);font-size:.75rem;font-weight:400">.in</span></span>
+  </a>
+  <ul>
+    <li><a href="/schools/">Browse Schools</a></li>
+    <li><a href="/states/">By State</a></li>
+    <li><a href="/search/">Search</a></li>
+    <li><a href="/about/">About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🇮🇳 India's Most Complete School Directory</div>
+  <h1>Find Any School<br>Across <span class="accent">India</span></h1>
+  <p>Search from 16 lakh+ verified schools — government, private, aided — across every state and district of India.</p>
+
+  <div class="search-box">
+    <input type="text" id="heroSearch" placeholder="Search school name, UDISE code, or village..." autocomplete="off">
+    <button class="search-btn" onclick="doSearch()">🔍 Search</button>
+  </div>
+
+  <div class="search-tags">
+    <a href="/state/delhi/" class="search-tag">Delhi Schools</a>
+    <a href="/state/maharashtra/" class="search-tag">Maharashtra Schools</a>
+    <a href="/state/uttar-pradesh/" class="search-tag">UP Schools</a>
+    <a href="/state/rajasthan/" class="search-tag">Rajasthan Schools</a>
+    <a href="/state/tamil-nadu/" class="search-tag">Tamil Nadu Schools</a>
+    <a href="/state/karnataka/" class="search-tag">Karnataka Schools</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat">
+    <span class="stat-number">16,64,642</span>
+    <span class="stat-label">Total Schools</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">36</span>
+    <span class="stat-label">States & UTs</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">700+</span>
+    <span class="stat-label">Districts</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">6,00,000+</span>
+    <span class="stat-label">Villages Covered</span>
+  </div>
+</div>
+
+<!-- BROWSE BY STATE -->
+<div class="container">
+  <section>
+    <div class="section-title">Browse Schools by State</div>
+    <div class="section-sub">Select your state to explore all schools in that region</div>
+
+    <div class="state-grid" id="stateGrid">
+      <!-- Dynamically generated -->
+    </div>
+  </section>
+
+  <!-- SAMPLE SCHOOLS -->
+  <section>
+    <div class="section-title">Recently Viewed Schools</div>
+    <div class="section-sub">Explore some schools from our directory</div>
+
+    <div class="school-grid" id="schoolGrid">
+      <!-- Dynamically generated -->
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section>
+    <div class="section-title">Why Schoolspedia.in?</div>
+    <div class="section-sub">The most complete, accurate Indian school database</div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">📊</span>
+        <div class="feature-title">UDISE Data — Official Source</div>
+        <p class="feature-text">All data sourced from India's official UDISE (Unified District Information System for Education) database — the most authoritative school data in India.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔍</span>
+        <div class="feature-title">Search by Any Parameter</div>
+        <p class="feature-text">Find schools by name, UDISE code, state, district, block, village, management type, school category, or rural/urban location.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📍</span>
+        <div class="feature-title">Village-Level Coverage</div>
+        <p class="feature-text">Every school is mapped down to its village and cluster, making it easy to find the nearest school in even the most remote areas of India.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🆓</span>
+        <div class="feature-title">Free & Open Access</div>
+        <p class="feature-text">Completely free to use. No sign-up required. Parents, students, researchers and educators can access all school information instantly.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon">🏫</div>
+        <span class="logo-text">Schools<span style="color:#7DD3FC">India</span>.in</span>
+      </div>
+      <p class="footer-desc">India's most comprehensive school directory with data on 16 lakh+ schools across all states and union territories. Based on official UDISE data.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Browse</h4>
+      <ul>
+        <li><a href="/state/delhi/">Delhi Schools</a></li>
+        <li><a href="/state/maharashtra/">Maharashtra</a></li>
+        <li><a href="/state/uttar-pradesh/">Uttar Pradesh</a></li>
+        <li><a href="/state/rajasthan/">Rajasthan</a></li>
+        <li><a href="/state/karnataka/">Karnataka</a></li>
+        <li><a href="/states/">All States →</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>School Types</h4>
+      <ul>
+        <li><a href="/type/government/">Government Schools</a></li>
+        <li><a href="/type/private/">Private Schools</a></li>
+        <li><a href="/type/aided/">Aided Schools</a></li>
+        <li><a href="/type/primary/">Primary Schools</a></li>
+        <li><a href="/type/secondary/">Secondary Schools</a></li>
+        <li><a href="/type/higher-secondary/">Higher Secondary</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Info</h4>
+      <ul>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="/privacy/">Privacy Policy</a></li>
+        <li><a href="/disclaimer/">Disclaimer</a></li>
+        <li><a href="/sitemap.xml">Sitemap</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Schoolspedia.in — Data sourced from UDISE, Govt. of India</span>
+    <span>Made with ❤️ for India's students & parents</span>
+  </div>
+</footer>
+
+<script>
+  // State data (will be filled by generator)
+  const STATES = [
+    { name: "Andhra Pradesh", slug: "andhra-pradesh", count: "58,412" },
+    { name: "Assam", slug: "assam", count: "54,320" },
+    { name: "Bihar", slug: "bihar", count: "75,210" },
+    { name: "Delhi", slug: "delhi", count: "5,624" },
+    { name: "Gujarat", slug: "gujarat", count: "42,180" },
+    { name: "Haryana", slug: "haryana", count: "14,350" },
+    { name: "Karnataka", slug: "karnataka", count: "61,740" },
+    { name: "Kerala", slug: "kerala", count: "12,800" },
+    { name: "Madhya Pradesh", slug: "madhya-pradesh", count: "1,22,340" },
+    { name: "Maharashtra", slug: "maharashtra", count: "88,200" },
+    { name: "Odisha", slug: "odisha", count: "52,450" },
+    { name: "Punjab", slug: "punjab", count: "19,600" },
+    { name: "Rajasthan", slug: "rajasthan", count: "81,300" },
+    { name: "Tamil Nadu", slug: "tamil-nadu", count: "46,700" },
+    { name: "Telangana", slug: "telangana", count: "38,240" },
+    { name: "Uttar Pradesh", slug: "uttar-pradesh", count: "2,11,400" },
+    { name: "West Bengal", slug: "west-bengal", count: "85,600" },
+    { name: "Himachal Pradesh", slug: "himachal-pradesh", count: "16,400" },
+    { name: "Jharkhand", slug: "jharkhand", count: "38,900" },
+    { name: "Chhattisgarh", slug: "chhattisgarh", count: "52,700" },
+  ];
+
+  const stateGrid = document.getElementById('stateGrid');
+  STATES.forEach(s => {
+    stateGrid.innerHTML += `
+      <a href="/state/${s.slug}/" class="state-card">
+        <div>
+          <div class="state-name">${s.name}</div>
+          <div class="state-count">${s.count} schools</div>
+        </div>
+        <div class="state-arrow">→</div>
+      </a>
+    `;
+  });
+
+  // Sample schools
+  const SAMPLE_SCHOOLS = [
+    { name: "GOVT SENIOR SECONDARY SCHOOL RAMAKRISHNAPUR", udise: "35010300101", state: "A&N Islands", village: "Ramakrishnapur", type: "Co-educational", mgmt: "Government", cat: "Higher Secondary" },
+    { name: "GOVT MIDDLE SCHOOL DUGONG CREEK", udise: "35010300103", state: "A&N Islands", village: "Ramakrishnapur", type: "Co-educational", mgmt: "Government", cat: "Upper Primary" },
+    { name: "ANANDA MARGA SCHOOL", udise: "35010300104", state: "A&N Islands", village: "Ramakrishnapur", type: "Co-educational", mgmt: "Private", cat: "Primary" },
+  ];
+
+  const schoolGrid = document.getElementById('schoolGrid');
+  SAMPLE_SCHOOLS.forEach(s => {
+    const isGovt = s.mgmt === 'Government';
+    schoolGrid.innerHTML += `
+      <a href="/school/${s.udise}/" class="school-card">
+        <div class="school-card-top">
+          <div class="school-icon">🏫</div>
+          <div>
+            <div class="school-name">${s.name}</div>
+            <div class="school-meta">
+              <span class="badge ${isGovt ? 'badge-govt' : 'badge-private'}">${s.mgmt}</span>
+              <span class="badge badge-type">${s.cat}</span>
+            </div>
+          </div>
+        </div>
+        <div class="school-location">📍 ${s.village}, ${s.state}</div>
+        <div class="udise-tag">UDISE: ${s.udise}</div>
+      </a>
+    `;
+  });
+
+  function doSearch() {
+    const q = document.getElementById('heroSearch').value.trim();
+    if (q) window.location.href = `/search/?q=${encodeURIComponent(q)}`;
+  }
+
+  document.getElementById('heroSearch').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSearch();
+  });
+</script>
+</body>
+</html>

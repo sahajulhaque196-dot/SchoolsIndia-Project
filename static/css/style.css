@@ -1,0 +1,141 @@
+/* Schoolspedia.in — Complete Stylesheet
+   schoolspedia.in | © 2026
+   Fonts loaded here once (browser caches) */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+
+:root{
+  --nav-bg:#1C2B3A;--nav-border:#38BDF8;
+  --accent:#0EA5E9;--accent-lt:#38BDF8;--accent-bg:#F0F9FF;
+  --green:#16A34A;--navy:#1C2B3A;
+  --cream:#FAFAF9;--text:#1C1917;--muted:#78716C;
+  --border:#E7E5E4;--border-2:#D6D3D1;--white:#FFFFFF;
+  --r:10px;--r-lg:16px;
+  --shadow:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.04);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;background:var(--cream);color:var(--text);line-height:1.65}
+a{color:inherit;text-decoration:none}
+strong{font-weight:600}
+nav{background:var(--nav-bg);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px;border-bottom:3px solid var(--nav-border);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:34px;height:34px;background:var(--accent-lt);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.logo-text{font-size:1.05rem;font-weight:800;color:#fff;letter-spacing:-.3px}
+.logo-text span,.logo-text em{color:var(--accent-lt);font-style:normal}
+.wrap{max-width:900px;margin:0 auto;padding:0 1.25rem}
+.container{max-width:900px;margin:0 auto;padding:0 1.5rem}
+.bc{padding:14px 0 0;font-size:.78rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.bc a{color:var(--accent);font-weight:500}
+.bc a:hover{text-decoration:underline}
+.bc-sep{color:#A8A29E;font-size:.7rem}
+/* School hero card */
+.school-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px 26px;margin:14px 0 0;box-shadow:var(--shadow-md);position:relative;overflow:hidden}
+.school-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#38BDF8,#0EA5E9,#7DD3FC)}
+.school-eyebrow{display:flex;align-items:center;gap:8px;font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
+.school-eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px #E0F2FE}
+.school-name{font-family:Georgia,'Times New Roman',serif;font-size:clamp(1.2rem,3.5vw,1.65rem);color:var(--text);line-height:1.2;margin-bottom:14px}
+.school-badges{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.badge{display:inline-flex;align-items:center;padding:4px 11px;border-radius:100px;font-size:.73rem;font-weight:600;border:1px solid transparent}
+.badge-green{background:#F0FDF4;color:#16A34A;border-color:#BBF7D0}
+.badge-blue{background:#F0F9FF;color:#0284C7;border-color:#BAE6FD}
+.badge-amber{background:#FFFBEB;color:#B45309;border-color:#FDE68A}
+.badge-stone{background:#F5F5F4;color:#57534E;border-color:#E7E5E4}
+.school-location{font-size:.84rem;color:var(--muted);display:flex;align-items:flex-start;gap:5px;margin-bottom:16px}
+.school-udise-row{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:#F5F5F4;border-radius:var(--r);border:1px solid var(--border);gap:12px;flex-wrap:wrap}
+.udise-label{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:3px}
+.udise-val{font-size:1.1rem;font-weight:700;color:var(--text);letter-spacing:1px}
+.status-pill{display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:#16A34A}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#16A34A;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(22,163,74,.4)}50%{box-shadow:0 0 0 5px rgba(22,163,74,0)}}
+/* Ad slot */
+.ad-slot{background:var(--white);border:1px dashed var(--border-2);border-radius:var(--r);padding:10px;text-align:center;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.72rem;margin:16px 0}
+/* Section */
+.sec{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin:0 0 16px;box-shadow:var(--shadow)}
+.sec-head{display:flex;align-items:center;gap:9px;padding:12px 20px;border-bottom:1px solid var(--border);background:#F5F5F4}
+.sec-head-icon{font-size:1rem}
+.sec-head-title{font-size:.85rem;font-weight:700;color:var(--text)}
+/* Info table */
+.info-table{width:100%;border-collapse:collapse}
+.info-table tr{border-bottom:1px solid var(--border)}
+.info-table tr:last-child{border-bottom:none}
+.info-table tr:hover{background:var(--cream)}
+.info-table th{padding:11px 20px;font-size:.75rem;font-weight:600;color:var(--muted);text-align:left;width:36%;text-transform:uppercase;letter-spacing:.4px;background:#F5F5F4}
+.info-table td{padding:11px 20px;font-size:.88rem;color:#44403C}
+.info-table td a{color:var(--accent);font-weight:500}
+.udise-td{font-size:.9rem;font-weight:700;color:var(--text);letter-spacing:.8px}
+.status-td{font-weight:600;color:#16A34A}
+/* District stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:16px 20px}
+.stat-box{background:#F5F5F4;border:1px solid var(--border);border-radius:var(--r);padding:12px 13px}
+.stat-num{font-size:1.15rem;font-weight:700;color:var(--text);letter-spacing:-.3px;display:block;margin-bottom:4px}
+.stat-lbl{font-size:.7rem;color:var(--muted);font-weight:500;line-height:1.35}
+/* Bars */
+.bars-wrap{padding:0 20px 16px}
+.bar-row{margin-bottom:11px}
+.bar-labels{display:flex;justify-content:space-between;margin-bottom:4px}
+.bar-name{font-size:.78rem;font-weight:500;color:#44403C}
+.bar-pct{font-size:.78rem;font-weight:600;color:var(--text)}
+.bar-track{height:6px;background:#E7E5E4;border-radius:100px;overflow:hidden}
+.bar-fill{height:100%;border-radius:100px}
+.bar-green{background:#16a34a}
+.bar-blue{background:#1d4ed8}
+.bar-violet{background:#7C3AED}
+.bar-amber{background:#B45309}
+/* Religion */
+.rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;padding:0 20px 16px}
+.rel-box{background:#F5F5F4;border:1px solid var(--border);border-radius:var(--r);padding:9px 11px}
+.rel-name{font-size:.72rem;color:var(--muted);font-weight:500;margin-bottom:3px}
+.rel-pct{font-size:.95rem;font-weight:700;color:var(--text)}
+/* Prose article */
+.prose{padding:20px 22px}
+.prose h2{font-family:Georgia,serif;font-size:1.2rem;color:var(--text);margin:22px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.prose h2:first-child{margin-top:0}
+.prose h3{font-size:.95rem;font-weight:700;color:var(--text);margin:16px 0 7px}
+.prose p{font-size:.91rem;color:#44403C;line-height:1.82;margin-bottom:12px}
+.prose p:last-child{margin-bottom:0}
+.prose a{color:var(--accent);border-bottom:1px solid #BAE6FD}
+.callout{background:#FFF7ED;border-left:3px solid var(--accent-lt);border-radius:0 var(--r) var(--r) 0;padding:12px 15px;margin:14px 0}
+.callout p{margin:0;font-size:.87rem}
+/* FAQ */
+.faq-list{padding:4px 0}
+.faq-item{padding:14px 20px;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-q{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:6px;display:grid;grid-template-columns:18px 1fr;gap:8px;align-items:start}
+.faq-q-num{width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;flex-shrink:0}
+.faq-a{font-size:.85rem;color:var(--muted);line-height:1.7;padding-left:26px}
+/* Related schools */
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:14px 20px}
+.rc{background:#F5F5F4;border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;text-decoration:none;display:block;transition:all .18s}
+.rc:hover{border-color:var(--accent-lt);background:var(--accent-bg);transform:translateY(-1px)}
+.rc-name{font-size:.84rem;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:5px}
+.rc-meta{font-size:.73rem;color:var(--muted)}
+.rc-udise{font-size:.7rem;color:var(--accent);margin-top:5px}
+/* State/District pages */
+.state-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.state-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:17px 15px;text-decoration:none;color:var(--text);display:flex;align-items:center;justify-content:space-between;transition:all .18s}
+.state-card:hover{border-color:var(--accent-lt);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.state-name{font-weight:600;font-size:.88rem}
+.state-count{font-size:.72rem;color:var(--muted);margin-top:3px}
+.state-arrow{color:var(--accent-lt)}
+.school-list{display:flex;flex-direction:column;gap:10px}
+.school-row{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:13px 17px;text-decoration:none;color:var(--text);display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;transition:all .18s}
+.school-row:hover{border-color:var(--accent-lt);transform:translateY(-1px)}
+.school-row-name{font-weight:700;font-size:.88rem;color:var(--navy)}
+.school-row-meta{font-size:.75rem;color:var(--muted);margin-top:3px}
+.school-row-udise{font-size:.72rem;color:var(--muted);text-align:right}
+/* Disclaimer */
+.disclaimer{background:#F5F5F4;border:1px solid var(--border);border-radius:var(--r);padding:11px 15px;margin:0 0 16px;font-size:.75rem;color:var(--muted);line-height:1.65}
+.disclaimer a{color:var(--accent)}
+/* Footer */
+footer{background:var(--nav-bg);color:rgba(255,255,255,.5);padding:26px 1.5rem;text-align:center;font-size:.78rem;margin-top:36px;border-top:3px solid var(--nav-border)}
+footer a{color:rgba(255,255,255,.65)}
+footer a:hover{color:#fff}
+footer strong{color:rgba(255,255,255,.8)}
+/* Responsive */
+@media(max-width:600px){
+  nav{padding:0 1rem}
+  .school-card{padding:18px 14px}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .school-udise-row{flex-direction:column;align-items:flex-start}
+}
