@@ -22,19 +22,14 @@ jobs:
       - name: Install Python dependencies
         run: pip install pandas
 
-      - name: Download schools CSV from release
+      - name: Download CSV files from GitHub Release
         run: |
-          echo "CSV files will be downloaded from GitHub Release assets"
-          ls -la
-
-      - name: Upload CSV files notice
-        run: |
-          if [ ! -f "schools.csv" ]; then
-            echo "ERROR: schools.csv not found!"
-            echo "Please upload schools.csv and LocalDataHub_Village_Master_v2.csv"
-            echo "as GitHub Release assets (see README)"
-            exit 1
-          fi
+          echo "Downloading schools.csv..."
+          wget -q "https://github.com/sahajulhaque196-dot/SchoolsIndia-Project/releases/download/v1.0/schools.csv" -O schools.csv
+          echo "Downloading village CSV..."
+          wget -q "https://github.com/sahajulhaque196-dot/SchoolsIndia-Project/releases/download/v1.0/LocalDataHub_Village_Master_v2.csv" -O LocalDataHub_Village_Master_v2.csv
+          echo "Files downloaded!"
+          ls -lh *.csv
 
       - name: Generate school pages
         run: |
@@ -46,23 +41,13 @@ jobs:
 
       - name: Copy policy pages to output
         run: |
-          # About
-          mkdir -p output/about
-          cp pages/about.html output/about/index.html
-          # Privacy
-          mkdir -p output/privacy
-          cp pages/privacy.html output/privacy/index.html
-          # Disclaimer
-          mkdir -p output/disclaimer
-          cp pages/disclaimer.html output/disclaimer/index.html
-          # Terms
-          mkdir -p output/terms
-          cp pages/terms.html output/terms/index.html
-          # Contact
-          mkdir -p output/contact
-          cp pages/contact.html output/contact/index.html
-          # Articles
+          mkdir -p output/about && cp pages/about.html output/about/index.html
+          mkdir -p output/privacy && cp pages/privacy.html output/privacy/index.html
+          mkdir -p output/disclaimer && cp pages/disclaimer.html output/disclaimer/index.html
+          mkdir -p output/terms && cp pages/terms.html output/terms/index.html
+          mkdir -p output/contact && cp pages/contact.html output/contact/index.html
           cp -r articles output/articles
+          echo "Policy pages copied!"
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
