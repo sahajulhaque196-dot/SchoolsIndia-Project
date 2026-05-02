@@ -19,16 +19,15 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Python dependencies
-        run: pip install pandas
+      - name: Install dependencies
+        run: |
+          pip install pandas
+          npm install -g wrangler@latest
 
       - name: Download CSV files from GitHub Release
         run: |
-          echo "Downloading schools.csv..."
           wget -q "https://github.com/sahajulhaque196-dot/SchoolsIndia-Project/releases/download/v1.0/schools.csv" -O schools.csv
-          echo "Downloading village CSV..."
           wget -q "https://github.com/sahajulhaque196-dot/SchoolsIndia-Project/releases/download/v1.0/LocalDataHub_Village_Master_v2.csv" -O LocalDataHub_Village_Master_v2.csv
-          echo "Files downloaded!"
           ls -lh *.csv
 
       - name: Generate school pages
@@ -47,13 +46,17 @@ jobs:
           mkdir -p output/terms && cp pages/terms.html output/terms/index.html
           mkdir -p output/contact && cp pages/contact.html output/contact/index.html
           cp -r articles output/articles
-          echo "Policy pages copied!"
+          echo "Total files in output:"
+          find output -type f | wc -l
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          command: pages deploy output --project-name=schoolspedia --commit-dirty=true
+        run: |
+          export NODE_OPTIONS=--max-old-space-size=8192
+          npx wrangler@latest pages deploy output \
+            --project-name=schoolspedia \
+            --commit-dirty=true \
+            --branch=master
         env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           NODE_OPTIONS: --max-old-space-size=8192
