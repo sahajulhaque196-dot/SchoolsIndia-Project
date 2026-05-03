@@ -1,12 +1,17 @@
-name: Deploy Schoolspedia to Cloudflare R2 + Pages
+name: Deploy Schoolspedia to Cloudflare R2
 
 on:
   push:
     branches: [ master ]
   workflow_dispatch:
+    inputs:
+      skip_generate:
+        description: 'Skip generation, only upload (yes/no)'
+        required: false
+        default: 'no'
 
 jobs:
-  deploy:
+  generate:
     runs-on: ubuntu-latest
     timeout-minutes: 360
 
@@ -20,15 +25,12 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: |
-          pip install pandas
-          pip install boto3
+        run: pip install pandas boto3
 
-      - name: Download CSV files from GitHub Release
+      - name: Download CSV files
         run: |
           wget -q "https://github.com/sahajulhaque196-dot/SchoolsIndia-Project/releases/download/v1.0/schools.csv" -O schools.csv
           wget -q "https://github.com/sahajulhaque196-dot/SchoolsIndia-Project/releases/download/v1.0/LocalDataHub_Village_Master_v2.csv" -O LocalDataHub_Village_Master_v2.csv
-          echo "CSVs downloaded!"
           ls -lh *.csv
 
       - name: Generate school pages
@@ -39,7 +41,7 @@ jobs:
             --output output
         timeout-minutes: 300
 
-      - name: Copy policy pages to output
+      - name: Copy policy pages
         run: |
           mkdir -p output/about && cp pages/about.html output/about/index.html
           mkdir -p output/privacy && cp pages/privacy.html output/privacy/index.html
@@ -47,13 +49,12 @@ jobs:
           mkdir -p output/terms && cp pages/terms.html output/terms/index.html
           mkdir -p output/contact && cp pages/contact.html output/contact/index.html
           cp -r articles output/articles
-          echo "Total files:"
-          find output -type f | wc -l
+          echo "Total files: $(find output -type f | wc -l)"
 
-      - name: Upload to Cloudflare R2
+      - name: Upload ALL files to R2
         run: |
-          python3 << 'PYEOF'
-          import boto3, os, mimetypes
+          python3 - << 'PYEOF'
+          import boto3, os, mimetypes, concurrent.futures
           from botocore.config import Config
 
           R2_ACCOUNT_ID = os.environ['R2_ACCOUNT_ID']
@@ -61,62 +62,72 @@ jobs:
           R2_SECRET_KEY = os.environ['R2_SECRET_KEY']
           BUCKET = 'schoolspedia'
           OUTPUT_DIR = 'output'
+          MAX_WORKERS = 32  # parallel uploads
 
           s3 = boto3.client(
               's3',
               endpoint_url=f'https://{R2_ACCOUNT_ID}.r2.cloudflarestorage.com',
               aws_access_key_id=R2_ACCESS_KEY,
               aws_secret_access_key=R2_SECRET_KEY,
-              config=Config(signature_version='s3v4'),
+              config=Config(
+                  signature_version='s3v4',
+                  max_pool_connections=50,
+                  retries={'max_attempts': 3, 'mode': 'adaptive'}
+              ),
               region_name='auto'
           )
+
+          def get_content_type(fname):
+              if fname.endswith('.html'): return 'text/html; charset=utf-8'
+              if fname.endswith('.css'):  return 'text/css'
+              if fname.endswith('.js'):   return 'application/javascript'
+              if fname.endswith('.xml'):  return 'application/xml'
+              if fname.endswith('.txt'):  return 'text/plain'
+              ct, _ = mimetypes.guess_type(fname)
+              return ct or 'application/octet-stream'
+
+          # Collect all files
+          all_files = []
+          for root, dirs, files in os.walk(OUTPUT_DIR):
+              for fname in files:
+                  local_path = os.path.join(root, fname)
+                  key = os.path.relpath(local_path, OUTPUT_DIR).replace('\\', '/')
+                  all_files.append((local_path, key, get_content_type(fname)))
+
+          print(f'Total files to upload: {len(all_files):,}')
 
           uploaded = 0
           errors = 0
 
-          for root, dirs, files in os.walk(OUTPUT_DIR):
-              for fname in files:
-                  local_path = os.path.join(root, fname)
-                  # Key = path relative to output folder
-                  key = os.path.relpath(local_path, OUTPUT_DIR).replace('\\', '/')
-                  
-                  # Content type
-                  ct, _ = mimetypes.guess_type(fname)
-                  if not ct:
-                      ct = 'application/octet-stream'
-                  if fname.endswith('.html'):
-                      ct = 'text/html; charset=utf-8'
-                  elif fname.endswith('.css'):
-                      ct = 'text/css'
-                  elif fname.endswith('.js'):
-                      ct = 'application/javascript'
-                  elif fname.endswith('.xml'):
-                      ct = 'application/xml'
-                  elif fname.endswith('.txt'):
-                      ct = 'text/plain'
+          def upload_file(args):
+              local_path, key, ct = args
+              try:
+                  s3.upload_file(
+                      local_path, BUCKET, key,
+                      ExtraArgs={
+                          'ContentType': ct,
+                          'CacheControl': 'public, max-age=86400'
+                      }
+                  )
+                  return True
+              except Exception as e:
+                  print(f'Error: {key} — {e}')
+                  return False
 
-                  try:
-                      s3.upload_file(
-                          local_path, BUCKET, key,
-                          ExtraArgs={
-                              'ContentType': ct,
-                              'CacheControl': 'public, max-age=86400'
-                          }
-                      )
+          # Upload with 32 parallel threads
+          with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+              futures = {executor.submit(upload_file, f): f for f in all_files}
+              for future in concurrent.futures.as_completed(futures):
+                  if future.result():
                       uploaded += 1
-                      if uploaded % 10000 == 0:
-                          print(f'Uploaded {uploaded:,} files...')
-                  except Exception as e:
+                  else:
                       errors += 1
-                      if errors < 5:
-                          print(f'Error: {key} — {e}')
+                  if (uploaded + errors) % 50000 == 0:
+                      print(f'Progress: {uploaded:,} uploaded, {errors} errors')
 
-          print(f'Done! Uploaded {uploaded:,} files. Errors: {errors}')
+          print(f'DONE! Uploaded: {uploaded:,} | Errors: {errors}')
           PYEOF
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
           R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
-
-      - name: Done
-        run: echo "All files uploaded to R2! Website is live."
