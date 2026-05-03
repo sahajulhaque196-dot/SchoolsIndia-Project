@@ -1,4 +1,4 @@
-name: Deploy Schoolspedia to Cloudflare Pages
+name: Deploy Schoolspedia to Cloudflare R2 + Pages
 
 on:
   push:
@@ -22,12 +22,13 @@ jobs:
       - name: Install dependencies
         run: |
           pip install pandas
-          npm install -g wrangler@latest
+          pip install boto3
 
       - name: Download CSV files from GitHub Release
         run: |
           wget -q "https://github.com/sahajulhaque196-dot/SchoolsIndia-Project/releases/download/v1.0/schools.csv" -O schools.csv
           wget -q "https://github.com/sahajulhaque196-dot/SchoolsIndia-Project/releases/download/v1.0/LocalDataHub_Village_Master_v2.csv" -O LocalDataHub_Village_Master_v2.csv
+          echo "CSVs downloaded!"
           ls -lh *.csv
 
       - name: Generate school pages
@@ -46,17 +47,76 @@ jobs:
           mkdir -p output/terms && cp pages/terms.html output/terms/index.html
           mkdir -p output/contact && cp pages/contact.html output/contact/index.html
           cp -r articles output/articles
-          echo "Total files in output:"
+          echo "Total files:"
           find output -type f | wc -l
 
-      - name: Deploy to Cloudflare Pages
+      - name: Upload to Cloudflare R2
         run: |
-          export NODE_OPTIONS=--max-old-space-size=8192
-          npx wrangler@latest pages deploy output \
-            --project-name=schoolspedia \
-            --commit-dirty=true \
-            --branch=master
+          python3 << 'PYEOF'
+          import boto3, os, mimetypes
+          from botocore.config import Config
+
+          R2_ACCOUNT_ID = os.environ['R2_ACCOUNT_ID']
+          R2_ACCESS_KEY = os.environ['R2_ACCESS_KEY']
+          R2_SECRET_KEY = os.environ['R2_SECRET_KEY']
+          BUCKET = 'schoolspedia'
+          OUTPUT_DIR = 'output'
+
+          s3 = boto3.client(
+              's3',
+              endpoint_url=f'https://{R2_ACCOUNT_ID}.r2.cloudflarestorage.com',
+              aws_access_key_id=R2_ACCESS_KEY,
+              aws_secret_access_key=R2_SECRET_KEY,
+              config=Config(signature_version='s3v4'),
+              region_name='auto'
+          )
+
+          uploaded = 0
+          errors = 0
+
+          for root, dirs, files in os.walk(OUTPUT_DIR):
+              for fname in files:
+                  local_path = os.path.join(root, fname)
+                  # Key = path relative to output folder
+                  key = os.path.relpath(local_path, OUTPUT_DIR).replace('\\', '/')
+                  
+                  # Content type
+                  ct, _ = mimetypes.guess_type(fname)
+                  if not ct:
+                      ct = 'application/octet-stream'
+                  if fname.endswith('.html'):
+                      ct = 'text/html; charset=utf-8'
+                  elif fname.endswith('.css'):
+                      ct = 'text/css'
+                  elif fname.endswith('.js'):
+                      ct = 'application/javascript'
+                  elif fname.endswith('.xml'):
+                      ct = 'application/xml'
+                  elif fname.endswith('.txt'):
+                      ct = 'text/plain'
+
+                  try:
+                      s3.upload_file(
+                          local_path, BUCKET, key,
+                          ExtraArgs={
+                              'ContentType': ct,
+                              'CacheControl': 'public, max-age=86400'
+                          }
+                      )
+                      uploaded += 1
+                      if uploaded % 10000 == 0:
+                          print(f'Uploaded {uploaded:,} files...')
+                  except Exception as e:
+                      errors += 1
+                      if errors < 5:
+                          print(f'Error: {key} — {e}')
+
+          print(f'Done! Uploaded {uploaded:,} files. Errors: {errors}')
+          PYEOF
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
-          NODE_OPTIONS: --max-old-space-size=8192
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
+          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
+
+      - name: Done
+        run: echo "All files uploaded to R2! Website is live."
